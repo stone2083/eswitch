@@ -161,7 +161,9 @@ Options:
   -c ACTION, --action=ACTION
                         specify eswitch action
 ```
+
 常用命令实例:
+```
 * print
 
     bin/eswitch.py -l localhost -c print
@@ -175,7 +177,8 @@ Options:
 * bin/eswitch.py -l localhost -p 30001 -c modify -i inquiry.service true 10
 
     命令执行后,会实时通知ESwitchEngine.
-    
+```
+
 #### eswitch console
 详见开关管理控制台项目， eswitch-console
 
@@ -187,6 +190,7 @@ Options:
 执行次数        耗时(单位毫秒)
 100000000       39972
 => 每次拦截增加0.39972微秒的开销
+```
 
 ```txt
 模拟对比测试
@@ -196,7 +200,7 @@ API模拟开销-单位毫秒    并发数  每次并发执行API调用数   开�
 5                    20      10000               56015                                 56155                                0.2499%
 1                    200     10000               12125                                 12161                                0.2969%
 5                    200     10000               56576                                 56665                                0.1573%
-=> 正常业务场景下,thresholdInterceptor对性能的影响几乎为零;
-=> 并发数的上次,对thresholdInterceptor没有影响;
-```
+
+正常业务场景下,thresholdInterceptor对性能的影响几乎为零;
+并发数的上升,对thresholdInterceptor没有影响;
 ```
