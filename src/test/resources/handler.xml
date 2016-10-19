@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd"
+    default-autowire="byName">
+
+    <bean id="switchEngine" class="com.helijia.framework.eswitch.item.DefaultSwitchEngine" />
+
+    <bean id="api" class="com.helijia.framework.eswitch.threshold.HandlerApi" />
+
+    <bean id="thresholdInterceptor" class="com.helijia.framework.eswitch.threshold.ThresholdInterceptorX" />
+
+    <bean id="thresholdPointcut" class="org.springframework.aop.support.JdkRegexpMethodPointcut" scope="prototype">
+        <property name="patterns">
+            <list>
+                <value>com.helijia.framework.eswitch.threshold.HandlerApi.*</value>
+            </list>
+        </property>
+    </bean>
+
+    <aop:config>
+        <aop:advisor advice-ref="thresholdInterceptor" pointcut-ref="thresholdPointcut" />
+    </aop:config>
+
+
+</beans>

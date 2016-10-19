@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd"
+    default-autowire="byName">
+
+    <!-- 开关引擎 -->
+    <bean id="switchEngine" class="com.helijia.framework.eswitch.item.DefaultSwitchEngine">
+        <property name="application" value="Example.App" />
+        <property name="server" ref="httpServer" />
+        <property name="invoker" ref="invoker" />
+    </bean>
+
+    <!-- 阀值拦截器 -->
+    <bean id="thresholdInterceptor" class="com.helijia.framework.eswitch.threshold.ThresholdInterceptor" />
+
+    <!-- 切面 -->
+    <bean id="thresholdPointcut" class="org.springframework.aop.support.JdkRegexpMethodPointcut">
+        <property name="patterns">
+            <list>
+                <value>com.helijia.framework.eswitch.example.SwitchExample.example</value>
+                <value>com.helijia.framework.eswitch.example.ProfileApi.test1</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- 通知服务 -->
+    <bean id="httpServer" class="com.helijia.framework.eswitch.server.DefaultActionServer" />
+
+    <bean id="invoker" class="com.helijia.framework.eswitch.item.HttpSwitchRpcInvoker">
+        <property name="url" value="http://127.0.0.1:8080" />
+    </bean>
+
+    <!-- aop -->
+    <aop:config>
+        <aop:advisor advice-ref="thresholdInterceptor" pointcut-ref="thresholdPointcut" />
+    </aop:config>
+
+    <!-- 演示例子 -->
+    <bean id="example" class="com.helijia.framework.eswitch.example.SwitchExample">
+        <property name="switchEngine" ref="switchEngine" />
+    </bean>
+
+    <bean id="profileApi" class="com.helijia.framework.eswitch.example.ProfileApi" />
+
+</beans>

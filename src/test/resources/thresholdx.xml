@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd"
+    default-autowire="byName">
+
+    <bean id="switchEngine" class="com.helijia.framework.eswitch.item.DefaultSwitchEngine" />
+
+    <bean id="api" class="com.helijia.framework.eswitch.threshold.Api" />
+    <bean id="api2" class="com.helijia.framework.eswitch.threshold.Api2" />
+
+    <bean id="xmlConfigurationStrategy" class="com.helijia.framework.eswitch.threshold.configuration.XmlConfigurationStrategy">
+        <property name="config">
+            <list>
+                <value>com.helijia.framework.eswitch.threshold.Api2#func1 api2.func1 1</value>
+                <value>com.helijia.framework.eswitch.threshold.Api3 api3 3</value>
+                <value>com.helijia.framework.eswitch.threshold api2.func2 2</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="thresholdInterceptor" class="com.helijia.framework.eswitch.threshold.DummyThresholdInterceptorX">
+        <property name="strategies">
+            <list>
+                <ref bean="xmlConfigurationStrategy" />
+            </list>
+        </property>
+    </bean>
+
+    <bean id="thresholdPointcut" class="org.springframework.aop.support.JdkRegexpMethodPointcut" scope="prototype">
+        <property name="patterns">
+            <list>
+                <value>com.helijia.framework.eswitch.threshold.Api.*</value>
+                <value>com.helijia.framework.eswitch.threshold.Api2.*</value>
+                <value>com.helijia.framework.eswitch.threshold.Api3.*</value>
+            </list>
+        </property>
+    </bean>
+
+    <aop:config>
+        <aop:advisor advice-ref="thresholdInterceptor" pointcut-ref="thresholdPointcut" />
+    </aop:config>
+
+
+</beans>

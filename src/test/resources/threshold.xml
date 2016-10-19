@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd"
+    default-autowire="byName">
+
+    <bean id="api3" class="com.helijia.framework.eswitch.threshold.Api3" />
+    <bean id="groupApi1" class="com.helijia.framework.eswitch.threshold.GroupApi1" />
+    <bean id="groupApi2" class="com.helijia.framework.eswitch.threshold.GroupApi2" />
+    <bean id="interfaceApi" class="com.helijia.framework.eswitch.threshold.InterfaceApiImpl" />
+    
+    <bean id="invoker" class="com.helijia.framework.eswitch.threshold.DummySwitchRpcInvoker" />
+    
+    <bean id="switchEngine" class="com.helijia.framework.eswitch.item.DefaultSwitchEngine">
+        <property name="application" value="TestApp" />
+    </bean>
+    <bean id="thresholdInterceptor" class="com.helijia.framework.eswitch.threshold.ThresholdInterceptor" />
+    
+    <bean id="thresholdPointcut" class="org.springframework.aop.support.JdkRegexpMethodPointcut">
+        <property name="patterns">
+            <list>
+                <value>com.helijia.framework.eswitch.threshold.Api3.*</value>
+                <value>com.helijia.framework.eswitch.threshold.GroupApi*.*</value>
+                <value>com.helijia.framework.eswitch.threshold.Interface*.*</value>
+            </list>
+        </property>
+    </bean>
+    
+     <aop:config>
+        <aop:advisor advice-ref="thresholdInterceptor" pointcut-ref="thresholdPointcut" />
+    </aop:config>
+    
+
+</beans>
